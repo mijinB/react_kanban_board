@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-export const minuteState = atom({
-    key: "minutes",
-    default: 0,
+export const toDoState = atom({
+    key: "toDos",
+    default: ["a", "b", "c", "d", "e", "f"],
 });
