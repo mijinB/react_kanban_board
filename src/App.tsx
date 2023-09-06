@@ -36,13 +36,27 @@ function App() {
      */
     const onDragEnd = ({ draggableId, source, destination }: DropResult) => {
         if (!destination) return;
-        if (destination.droppableId === source.droppableId) {
+        if (source.droppableId === destination.droppableId) {
             setToDos((prevToDos) => {
                 const boardCopy = [...prevToDos[source.droppableId]];
                 boardCopy.splice(source.index, 1);
                 boardCopy.splice(destination?.index, 0, draggableId);
 
                 return { ...prevToDos, [source.droppableId]: boardCopy };
+            });
+        }
+        if (source.droppableId !== destination.droppableId) {
+            setToDos((allBoards) => {
+                const sourceBoard = [...allBoards[source.droppableId]];
+                const destinationBoard = [...allBoards[destination.droppableId]];
+                sourceBoard.splice(source.index, 1);
+                destinationBoard.splice(destination.index, 0, draggableId);
+
+                return {
+                    ...allBoards,
+                    [source.droppableId]: sourceBoard,
+                    [destination.droppableId]: destinationBoard,
+                };
             });
         }
     };
