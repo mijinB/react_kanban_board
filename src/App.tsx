@@ -27,14 +27,16 @@ function App() {
 
     /**@function onDragEnd
      * 1. event로 draggableId와 source, destination을 인자로 받고
-     * 2. source(드래그), destination(드롭)이 서로 draggableId(해당 위치의 boardId)가 일치하면 아래 기능 수행, 일치하지 않는다면 아무것도 하지않고 함수 종료
-     * 3. toDos의 3개 List 중에서 변화가 일어난 draggableId의 List만 복사해놓고
-     * 4. source.index(드래그한 item의 위치)에 있는 item 삭제
-     * 5. destination.index(드롭한 item의 위치)에 draggableId(드래그한 item, 삭제했던 item) 삽입
-     * 6. toDos의 기존 3개 List에서 변화가 일어난 List만 수정하여 toDos Object 반환(setToDos)
+     * 2. destination의 유무 확인 후 없으면 아무것도 return하지 않고 함수 종료(제자리에 드롭했을 경우를 위함)
+     * 3. source(드래그), destination(드롭)이 서로 draggableId(해당 위치의 boardId)가 일치하면 아래 기능 수행, 일치하지 않는다면 아무것도 하지않고 함수 종료
+     * 4. toDos의 3개 List 중에서 변화가 일어난 draggableId의 List만 복사해놓고
+     * 5. source.index(드래그한 item의 위치)에 있는 item 삭제
+     * 6. destination.index(드롭한 item의 위치)에 draggableId(드래그한 item, 삭제했던 item) 삽입
+     * 7. toDos의 기존 3개 List에서 변화가 일어난 List만 수정하여 toDos Object 반환(setToDos)
      */
     const onDragEnd = ({ draggableId, source, destination }: DropResult) => {
-        if (destination?.droppableId === source.droppableId) {
+        if (!destination) return;
+        if (destination.droppableId === source.droppableId) {
             setToDos((prevToDos) => {
                 const boardCopy = [...prevToDos[source.droppableId]];
                 boardCopy.splice(source.index, 1);
