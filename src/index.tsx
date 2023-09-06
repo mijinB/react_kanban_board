@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 import { RecoilRoot } from "recoil";
 import App from "./App";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
-import { darkTheme } from "./theme";
+import { theme } from "./theme";
 
 const GlobalStyle = createGlobalStyle`
 html, body, div, span, applet, object, iframe,
@@ -58,7 +58,7 @@ table {
 body {
     font-family: 'Source Sans 3', sans-serif;
     background-color: ${(props) => props.theme.bgColor};
-    color: ${(props) => props.theme.textColor};
+    color: black;
     transition: all 0.2s ease-out;
 }
 a {
@@ -73,7 +73,7 @@ li {
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
     <RecoilRoot>
-        <ThemeProvider theme={darkTheme}>
+        <ThemeProvider theme={theme}>
             <GlobalStyle />
             <App />
         </ThemeProvider>
