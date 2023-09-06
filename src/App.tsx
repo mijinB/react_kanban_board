@@ -1,7 +1,7 @@
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useRecoilState } from "recoil";
 import { styled } from "styled-components";
-import { toDoState } from "./atoms";
+import { IToDoState, toDoState } from "./atoms";
 import Board from "./components/Board";
 
 const Wrapper = styled.div`
@@ -26,39 +26,25 @@ function App() {
     const [toDos, setToDos] = useRecoilState(toDoState);
 
     /**@function onDragEnd
-     * 1. event로 draggableId와 source, destination을 인자로 받고
+     * 1. event로 draggableId(위치를 변경할 item)와 source(기존 위치에 대한 data), destination(변경할 위치에 대한 data)을 인자로 받고
      * 2. destination의 유무 확인 후 없으면 아무것도 return하지 않고 함수 종료(제자리에 드롭했을 경우를 위함)
-     * 3. source(드래그), destination(드롭)이 서로 draggableId(해당 위치의 boardId)가 일치하면 아래 기능 수행, 일치하지 않는다면 아무것도 하지않고 함수 종료
-     * 4. toDos의 3개 List 중에서 변화가 일어난 draggableId의 List만 복사해놓고
-     * 5. source.index(드래그한 item의 위치)에 있는 item 삭제
-     * 6. destination.index(드롭한 item의 위치)에 draggableId(드래그한 item, 삭제했던 item) 삽입
-     * 7. toDos의 기존 3개 List에서 변화가 일어난 List만 수정하여 toDos Object 반환(setToDos)
+     * 3. (setToDos 사용)_기존 toDos object를 copyToDos 변수에 복사하고 아래 5,6으로 수정
+     * 5. 드래그한 board 위치에 있는 item 삭제
+     * 6. 드롭한 board 위치로 드래그한 item 삽입
+     * 7. 수정한 copyToDos를 toDos object로 return
      */
     const onDragEnd = ({ draggableId, source, destination }: DropResult) => {
         if (!destination) return;
-        if (source.droppableId === destination.droppableId) {
-            setToDos((prevToDos) => {
-                const boardCopy = [...prevToDos[source.droppableId]];
-                boardCopy.splice(source.index, 1);
-                boardCopy.splice(destination?.index, 0, draggableId);
+        setToDos((allBoards) => {
+            const copyToDos: IToDoState = {};
 
-                return { ...prevToDos, [source.droppableId]: boardCopy };
-            });
-        }
-        if (source.droppableId !== destination.droppableId) {
-            setToDos((allBoards) => {
-                const sourceBoard = [...allBoards[source.droppableId]];
-                const destinationBoard = [...allBoards[destination.droppableId]];
-                sourceBoard.splice(source.index, 1);
-                destinationBoard.splice(destination.index, 0, draggableId);
+            Object.keys(allBoards).map((toDoKey) => (copyToDos[toDoKey] = [...allBoards[toDoKey]]));
 
-                return {
-                    ...allBoards,
-                    [source.droppableId]: sourceBoard,
-                    [destination.droppableId]: destinationBoard,
-                };
-            });
-        }
+            copyToDos[source.droppableId].splice(source.index, 1);
+            copyToDos[destination.droppableId].splice(destination.index, 0, draggableId);
+
+            return copyToDos;
+        });
     };
 
     return (
