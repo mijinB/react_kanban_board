@@ -1,8 +1,8 @@
-import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useRecoilState } from "recoil";
 import { styled } from "styled-components";
 import { toDoState } from "./atoms";
-import DraggableCard from "./components/DraggableCard";
+import Board from "./components/Board";
 
 const Wrapper = styled.div`
     display: flex;
@@ -10,21 +10,16 @@ const Wrapper = styled.div`
     align-items: center;
     width: 100%;
     height: 100vh;
-    max-width: 480px;
+    max-width: 680px;
     margin: 0 auto;
 `;
 
 const Boards = styled.div`
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
     width: 100%;
     min-height: 200px;
-`;
-
-const Board = styled.div`
-    padding: 30px 10px 20px;
-    border-radius: 5px;
-    background-color: ${(props) => props.theme.boardColor};
 `;
 
 function App() {
@@ -39,29 +34,22 @@ function App() {
      */
     const onDragEnd = ({ draggableId, source, destination }: DropResult) => {
         if (!destination) return;
-        setToDos((prevToDos) => {
+        /* setToDos((prevToDos) => {
             const copyToDos = [...prevToDos];
             copyToDos.splice(source.index, 1);
             copyToDos.splice(destination?.index, 0, draggableId);
 
             return copyToDos;
-        });
+        }); */
     };
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Wrapper>
                 <Boards>
-                    <Droppable droppableId="one">
-                        {(magic) => (
-                            <Board ref={magic.innerRef} {...magic.droppableProps}>
-                                {toDos.map((toDo, index) => (
-                                    <DraggableCard key={toDo} toDo={toDo} index={index} />
-                                ))}
-                                {magic.placeholder}
-                            </Board>
-                        )}
-                    </Droppable>
+                    {Object.keys(toDos).map((boardId) => (
+                        <Board key={boardId} boardId={boardId} toDos={toDos[boardId]} />
+                    ))}
                 </Boards>
             </Wrapper>
         </DragDropContext>
