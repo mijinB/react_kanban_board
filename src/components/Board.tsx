@@ -7,7 +7,7 @@ const Wrapper = styled.div`
     flex-direction: column;
     width: 300px;
     min-height: 300px;
-    padding: 10px 10px 20px;
+    padding-top: 10px;
     border-radius: 5px;
     background-color: ${(props) => props.theme.boardColor};
 `;
@@ -21,8 +21,9 @@ const Title = styled.h2`
 
 const Area = styled.div<IAreaProps>`
     flex-grow: 1;
+    padding: 20px;
     background-color: ${(props) =>
-        props.isDraggingOver ? "#dfe6e9" : props.isDraggingFromThis ? "#b2bec3" : "#74b9ff"};
+        props.isDraggingOver ? "#dfe6e9" : props.isDraggingFromThis ? "#b2bec3" : "transparent"};
     transition: background-color 0.3s ease-in-out;
 `;
 
