@@ -24,7 +24,7 @@ const Area = styled.div<IAreaProps>`
     flex-grow: 1;
     padding: 20px;
     background-color: ${(props) =>
-        props.isDraggingOver ? "#dfe6e9" : props.isDraggingFromThis ? "#b2bec3" : "transparent"};
+        props.$isDraggingOver ? "#dfe6e9" : props.$isDraggingFromThis ? "#b2bec3" : "transparent"};
     transition: background-color 0.3s ease-in-out;
 `;
 
@@ -41,8 +41,8 @@ interface IBoardProps {
 }
 
 interface IAreaProps {
-    isDraggingOver: boolean;
-    isDraggingFromThis: boolean;
+    $isDraggingOver: boolean;
+    $isDraggingFromThis: boolean;
 }
 
 interface IForm {
@@ -72,8 +72,8 @@ function Board({ boardId, toDos }: IBoardProps) {
                     <Area
                         ref={magic.innerRef}
                         {...magic.droppableProps}
-                        isDraggingOver={info.isDraggingOver}
-                        isDraggingFromThis={Boolean(info.draggingFromThisWith)}
+                        $isDraggingOver={info.isDraggingOver}
+                        $isDraggingFromThis={Boolean(info.draggingFromThisWith)}
                     >
                         {toDos.map((toDo, index) => (
                             <DraggableCard key={toDo} toDo={toDo} index={index} />
