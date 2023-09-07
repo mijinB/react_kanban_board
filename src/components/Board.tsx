@@ -1,6 +1,7 @@
 import { Droppable } from "@hello-pangea/dnd";
 import DraggableCard from "./DraggableCard";
 import { styled } from "styled-components";
+import { useRef } from "react";
 
 const Wrapper = styled.div`
     display: flex;
@@ -38,9 +39,20 @@ interface IAreaProps {
 }
 
 function Board({ boardId, toDos }: IBoardProps) {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    /**@function onClick
+     * 1. 참조 중인 input에 focus 주기
+     */
+    const onClick = () => {
+        inputRef.current?.focus();
+    };
+
     return (
         <Wrapper>
             <Title>{boardId}</Title>
+            <input ref={inputRef} placeholder="grab me" />
+            <button onClick={onClick}>click me</button>
             <Droppable droppableId={boardId}>
                 {(magic, info) => (
                     <Area
