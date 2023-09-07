@@ -3,7 +3,7 @@ import { Draggable } from "@hello-pangea/dnd";
 import { styled } from "styled-components";
 
 const Card = styled.div`
-    padding: 5px 10px;
+    padding: 10px;
     margin-bottom: 5px;
     border-radius: 5px;
     background-color: ${(props) => props.theme.cardColor};
