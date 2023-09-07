@@ -1,7 +1,7 @@
 import { Droppable } from "@hello-pangea/dnd";
 import DraggableCard from "./DraggableCard";
 import { styled } from "styled-components";
-import { useRef } from "react";
+import { useForm } from "react-hook-form";
 
 const Wrapper = styled.div`
     display: flex;
@@ -28,6 +28,13 @@ const Area = styled.div<IAreaProps>`
     transition: background-color 0.3s ease-in-out;
 `;
 
+const Form = styled.form`
+    width: 100%;
+    input {
+        width: 100%;
+    }
+`;
+
 interface IBoardProps {
     toDos: string[];
     boardId: string;
@@ -38,21 +45,28 @@ interface IAreaProps {
     isDraggingFromThis: boolean;
 }
 
-function Board({ boardId, toDos }: IBoardProps) {
-    const inputRef = useRef<HTMLInputElement>(null);
+interface IForm {
+    toDo: string;
+}
 
-    /**@function onClick
-     * 1. 참조 중인 input에 focus 주기
+function Board({ boardId, toDos }: IBoardProps) {
+    const { register, setValue, handleSubmit } = useForm<IForm>();
+
+    /**@function onValid
+     * 1. 인자로 받은 input의 data를 출력해서 확인
+     * 2. input을 빈 값으로 초기화
      */
-    const onClick = () => {
-        inputRef.current?.focus();
+    const onValid = (data: IForm) => {
+        console.log(data);
+        setValue("toDo", "");
     };
 
     return (
         <Wrapper>
             <Title>{boardId}</Title>
-            <input ref={inputRef} placeholder="grab me" />
-            <button onClick={onClick}>click me</button>
+            <Form onSubmit={handleSubmit(onValid)}>
+                <input {...register("toDo", { required: true })} type="text" placeholder={`Add task on ${boardId}`} />
+            </Form>
             <Droppable droppableId={boardId}>
                 {(magic, info) => (
                     <Area
