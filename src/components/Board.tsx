@@ -2,7 +2,8 @@ import { Droppable } from "@hello-pangea/dnd";
 import DraggableCard from "./DraggableCard";
 import { styled } from "styled-components";
 import { useForm } from "react-hook-form";
-import { IToDo } from "../atoms";
+import { IToDo, toDoState } from "../atoms";
+import { useSetRecoilState } from "recoil";
 
 const Wrapper = styled.div`
     display: flex;
@@ -51,13 +52,26 @@ interface IForm {
 }
 
 function Board({ boardId, toDos }: IBoardProps) {
+    const setToDos = useSetRecoilState(toDoState);
     const { register, setValue, handleSubmit } = useForm<IForm>();
 
     /**@function onValid
-     * 1. 인자로 받은 input의 data를 출력해서 확인
-     * 2. input을 빈 값으로 초기화
+     * 1. 인자로 받은 input의 값을 id(현재date)와 함께 새로운 toDo object로 저장
+     * 2. 새로운 todo object를 현재 board의 item으로 추가
+     * 3. input을 빈 값으로 초기화
      */
     const onValid = ({ toDo }: IForm) => {
+        const newToDo = {
+            id: Date.now(),
+            text: toDo,
+        };
+
+        setToDos((allBoards) => {
+            return {
+                ...allBoards,
+                [boardId]: [...allBoards[boardId], newToDo],
+            };
+        });
         setValue("toDo", "");
     };
 
