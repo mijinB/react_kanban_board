@@ -28,8 +28,9 @@ function App() {
     /**@function onDragEnd
      * 1. event로 draggableId(위치를 변경할 item)와 source(기존 위치에 대한 data), destination(변경할 위치에 대한 data)을 인자로 받고
      * 2. destination의 유무 확인 후 없으면 아무것도 return하지 않고 함수 종료(제자리에 드롭했을 경우를 위함)
-     * 3. (setToDos 사용)_기존 toDos object를 copyToDos 변수에 복사하고 아래 5,6으로 수정
-     * 5. 드래그한 board 위치에 있는 item 삭제
+     * 3. (setToDos 사용)_기존 toDos object를 copyToDos 변수에 복사하고
+     * 4. 드래그한 item을 변수에 따로 저장해놓고 아래 5,6 수행
+     * 5. 드래그한 board에서 드래그한 item 삭제
      * 6. 드롭한 board 위치로 드래그한 item 삽입
      * 7. 수정한 copyToDos를 toDos object로 return
      */
@@ -37,11 +38,14 @@ function App() {
         if (!destination) return;
         setToDos((allBoards) => {
             const copyToDos: IToDoState = {};
-
             Object.keys(allBoards).map((toDoKey) => (copyToDos[toDoKey] = [...allBoards[toDoKey]]));
 
-            copyToDos[source.droppableId].splice(source.index, 1);
-            copyToDos[destination.droppableId].splice(destination.index, 0, draggableId);
+            const taskObj = copyToDos[source.droppableId].find((item) => item.id === +draggableId);
+
+            if (taskObj) {
+                copyToDos[source.droppableId].splice(source.index, 1);
+                copyToDos[destination.droppableId].splice(destination.index, 0, taskObj);
+            }
 
             return copyToDos;
         });

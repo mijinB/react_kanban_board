@@ -2,6 +2,7 @@ import { Droppable } from "@hello-pangea/dnd";
 import DraggableCard from "./DraggableCard";
 import { styled } from "styled-components";
 import { useForm } from "react-hook-form";
+import { IToDo } from "../atoms";
 
 const Wrapper = styled.div`
     display: flex;
@@ -36,7 +37,7 @@ const Form = styled.form`
 `;
 
 interface IBoardProps {
-    toDos: string[];
+    toDos: IToDo[];
     boardId: string;
 }
 
@@ -56,8 +57,7 @@ function Board({ boardId, toDos }: IBoardProps) {
      * 1. 인자로 받은 input의 data를 출력해서 확인
      * 2. input을 빈 값으로 초기화
      */
-    const onValid = (data: IForm) => {
-        console.log(data);
+    const onValid = ({ toDo }: IForm) => {
         setValue("toDo", "");
     };
 
@@ -76,7 +76,7 @@ function Board({ boardId, toDos }: IBoardProps) {
                         $isDraggingFromThis={Boolean(info.draggingFromThisWith)}
                     >
                         {toDos.map((toDo, index) => (
-                            <DraggableCard key={toDo} toDo={toDo} index={index} />
+                            <DraggableCard key={toDo.id} toDoId={toDo.id} toDoText={toDo.text} index={index} />
                         ))}
                         {magic.placeholder}
                     </Area>
